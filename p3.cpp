@@ -52,17 +52,45 @@ ListNode* findNode(ListNode* head, int value) {
 }
 
 // TODO: implementar la conexión de las listas en el nodo con valor intersectVal
-// Si intersectVal no se encuentra, las listas permanecen separadas   
+// Si intersectVal no se encuentra, las listas permanecen separadas
 void connectLists(ListNode* listA, ListNode* listB, int intersectVal) {
-    //TODO: implemente aqui
-}
+    if (!listA || !listB) return;
 
+    // 1) Preferimos el nodo objetivo en A; si no está, buscamos en B
+    ListNode* target = findNode(listA, intersectVal);
+    if (target) {
+        // Conectar la cola de B al nodo objetivo en A
+        ListNode* cur = listB;
+        while (cur && cur->next) cur = cur->next;
+        if (cur) cur->next = target;
+        return;
+    }
+
+    target = findNode(listB, intersectVal);
+    if (target) {
+        // Conectar la cola de A al nodo objetivo en B
+        ListNode* cur = listA;
+        while (cur && cur->next) cur = cur->next;
+        if (cur) cur->next = target;
+    }
+    // Si no se encontró en ninguna, no hacemos nada
+}
 
 // TODO: implementar el algoritmo para encontrar la intersección de dos listas
 ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-    // TODO: implemente aqui
-    return nullptr;
+    // Técnica de dos punteros O(n+m) tiempo, O(1) espacio
+    if (!headA || !headB) return nullptr;
+
+    ListNode* a = headA;
+    ListNode* b = headB;
+
+    while (a != b) {
+        a = (a ? a->next : headB);
+        b = (b ? b->next : headA);
+    }
+    return a; // puede ser nullptr (sin intersección) o el nodo de intersección
 }
+
 
 void testIntersection(const vector<int>& listA, const vector<int>& listB, 
                      int intersectVal, const string& testName) {
